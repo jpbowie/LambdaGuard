@@ -18,8 +18,8 @@ from lambdaguard.core.AWS import AWS
 
 
 class S3(AWS):
-    def __init__(self, arn, profile=None, access_key_id=None, secret_access_key=None):
-        super().__init__(arn, profile, access_key_id, secret_access_key)
+    def __init__(self, arn, profile=None, access_key_id=None, secret_access_key=None, role=None):
+        super().__init__(arn, profile, access_key_id, secret_access_key, role)
 
         self.acl = None
         self.encryption = None

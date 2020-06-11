@@ -23,7 +23,7 @@ from lambdaguard.security.Scan import Scan
 
 class Lambda(AWS):
     def __init__(self, arn, *args, **kwargs):
-        super().__init__(arn, args[0].profile, args[0].keys[0], args[0].keys[1])
+        super().__init__(arn, args[0].profile, args[0].keys[0], args[0].keys[1], args[0].role)
 
         self.args = args[0]
         self.identity = args[1]
@@ -82,13 +82,15 @@ class Lambda(AWS):
                     config['KMSKeyArn'],
                     profile=self.profile,
                     access_key_id=self.access_key_id,
-                    secret_access_key=self.secret_access_key
+                    secret_access_key=self.secret_access_key,
+                    role=self.role_arn
                 )
             self.role = Role(
                 config['Role'],
                 profile=self.profile,
                 access_key_id=self.access_key_id,
-                secret_access_key=self.secret_access_key
+                secret_access_key=self.secret_access_key,
+                role=self.role_arn
             )
             self.layers = []
             if 'Layers' in config:

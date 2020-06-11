@@ -19,8 +19,8 @@ from lambdaguard.core.AWS import AWS
 
 
 class STS(AWS):
-    def __init__(self, arn, profile=None, access_key_id=None, secret_access_key=None):
-        super().__init__(arn, profile, access_key_id, secret_access_key)
+    def __init__(self, arn, profile=None, access_key_id=None, secret_access_key=None, role=None):
+        super().__init__(arn, profile, access_key_id, secret_access_key, role)
         self.caller = self.get_caller_identity()
         self.arn = arnparse(self.caller['Arn'])
         self.acl = ACL(self.caller['Arn'])

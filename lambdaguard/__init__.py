@@ -20,6 +20,7 @@ from lambdaguard.utils.log import debug
 from lambdaguard.utils.cli import parse_args, align, header, nocolor, green, orange
 from lambdaguard.utils.log import configure_log
 from lambdaguard.utils.paginator import paginate
+from lambdaguard.utils.session import create_session_with_args
 from lambdaguard.core.Lambda import Lambda
 from lambdaguard.core.STS import STS
 from lambdaguard.visibility.Statistics import Statistics
@@ -44,12 +45,7 @@ def get_client(args):
     '''
     Returns a Lambda botocore client
     '''
-    return boto3.Session(
-        profile_name=args.profile,
-        aws_access_key_id=args.keys[0],
-        aws_secret_access_key=args.keys[1],
-        region_name=args.region
-    ).client('lambda')
+    return create_session_with_args(args).client('lambda')
 
 
 def get_regions(args):
@@ -64,7 +60,7 @@ def get_regions(args):
         raise ValueError(f'No region specified')
     if args.function:
         return [arnparse(args.function).region]
-    available = boto3.Session().get_available_regions('lambda')
+    available = create_session_with_args(args).get_available_regions('lambda')
     if args.region == 'all':
         return available
     regions = args.region.split(',')
@@ -92,6 +88,7 @@ def get_usage(args):
                 usage[region] = function_count
         except Exception:
             debug(region)
+
     return usage
 
 
@@ -131,9 +128,9 @@ def run(arguments=''):
     configure_log(args.output)
     usage = get_usage(args)
     verbose(args, f'Loading identity')
-    region = list(usage.keys())[0]
+    region = list(usage.keys())[0] if len(usage.keys()) > 0 else args.region
     sts_arn = f'arn:aws:sts:{region}'
-    identity = STS(sts_arn, args.profile, args.keys[0], args.keys[1])
+    identity = STS(sts_arn, args.profile, args.keys[0], args.keys[1], args.role)
     if args.verbose:
         for _ in ['UserId', 'Account', 'Arn']:
             align(_, identity.caller[_], orange)

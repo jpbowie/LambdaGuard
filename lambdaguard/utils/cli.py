@@ -91,6 +91,11 @@ def parse_args(arguments=''):
         help='AWS keys: AccessKeyId SecretAccessKey'
     )
     argsParser.add_argument(
+        '--role',
+        default=None,
+        help='Switch to role using specified role arn.'
+        )    
+    argsParser.add_argument(
         '-r',
         '--region',
         default='all',
@@ -120,6 +125,9 @@ def parse_args(arguments=''):
     else:
         args = argsParser.parse_known_args()[0]
 
+    if args.role is not None and args.keys == [None, None]:
+        argsParser.error('--role can only be specified when --keys are used.')
+        
     return args
 
 

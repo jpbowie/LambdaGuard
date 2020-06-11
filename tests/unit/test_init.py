@@ -26,7 +26,7 @@ class Test(unittest.TestCase):
         # All regions
         args = parse_args('-r all')
         regions = get_regions(args)
-        self.assertEqual(len(regions), 18)
+        self.assertEqual(len(regions), 20)
         # List of regions
         args = parse_args('-r eu-west-1,ap-east-1')
         regions = get_regions(args)

@@ -34,6 +34,7 @@ class Scan:
         self.profile = args[0].profile
         self.access_key_id = args[0].keys[0]
         self.secret_access_key = args[0].keys[1]
+        self.role = args[0].key
         self.security = {'count': {}, 'items': []}
 
         self.item = None  # item currently scanned
@@ -105,7 +106,8 @@ class Scan:
                 self.report['kms'],
                 profile=self.profile,
                 access_key_id=self.access_key_id,
-                secret_access_key=self.secret_access_key
+                secret_access_key=self.secret_access_key,
+                role=self.role
             )
             if not self.item.rotation:
                 self.track(self.report['kms'], {
@@ -143,7 +145,8 @@ class Scan:
                     arn.full,
                     profile=self.profile,
                     access_key_id=self.access_key_id,
-                    secret_access_key=self.secret_access_key
+                    secret_access_key=self.secret_access_key,
+                    role=self.role
                 )
                 for _ in AccessControlList(self.item.acl).audit():
                     self.track(arn.full, _)
@@ -154,35 +157,40 @@ class Scan:
                     arn.full,
                     profile=self.profile,
                     access_key_id=self.access_key_id,
-                    secret_access_key=self.secret_access_key
+                    secret_access_key=self.secret_access_key,
+                    role=self.role
                 )
             elif arn.service == 'sns':
                 self.item = SNS(
                     arn.full,
                     profile=self.profile,
                     access_key_id=self.access_key_id,
-                    secret_access_key=self.secret_access_key
+                    secret_access_key=self.secret_access_key,
+                    role=self.role
                 )
             elif arn.service == 'apigateway':
                 self.item = APIGateway(
                     arn.full,
                     profile=self.profile,
                     access_key_id=self.access_key_id,
-                    secret_access_key=self.secret_access_key
+                    secret_access_key=self.secret_access_key,
+                    role=self.role
                 )
             elif arn.service == 'dynamodb':
                 self.item = DynamoDB(
                     arn.full,
                     profile=self.profile,
                     access_key_id=self.access_key_id,
-                    secret_access_key=self.secret_access_key
+                    secret_access_key=self.secret_access_key,
+                    role=self.role
                 )
             elif arn.service == 'kms':
                 self.item = KMS(
                     arn.full,
                     profile=self.profile,
                     access_key_id=self.access_key_id,
-                    secret_access_key=self.secret_access_key
+                    secret_access_key=self.secret_access_key,
+                    role=self.role
                 )
 
             if self.item:

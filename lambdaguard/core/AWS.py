@@ -14,13 +14,14 @@ specific language governing permissions and limitations under the License.
 """
 import boto3
 from lambdaguard.utils.arnparse import arnparse
+from lambdaguard.utils.session import create_session
 
 
 class AWS(object):
     '''
     Base AWS service object extended by each individual service class.
     '''
-    def __init__(self, arn, profile=None, access_key_id=None, secret_access_key=None):
+    def __init__(self, arn, profile=None, access_key_id=None, secret_access_key=None, role=None):
         # AWS ARN
         self.arn = arnparse(arn)
 
@@ -28,6 +29,7 @@ class AWS(object):
         self.profile = profile
         self.access_key_id = access_key_id
         self.secret_access_key = secret_access_key
+        self.role_arn = role
 
         # AWS Resource-based policy
         self.policy = {}
@@ -36,10 +38,14 @@ class AWS(object):
         self.info = ''
 
         # AWS connection
-        session = boto3.Session(profile_name=self.profile)
+        session = create_session(
+            self.arn.region,
+            self.profile,
+            self.access_key_id,
+            self.secret_access_key,
+            self.role_arn
+        )
         self.client = session.client(
             self.arn.service,
-            region_name=self.arn.region,
-            aws_access_key_id=access_key_id,
-            aws_secret_access_key=secret_access_key
+            region_name=self.arn.region
         )

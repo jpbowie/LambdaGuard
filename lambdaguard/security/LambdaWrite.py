@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 import boto3
 from lambdaguard.utils.iterator import iterate
 from lambdaguard.utils.paginator import paginate
+from lambdaguard.utils.session import create_session
 
 
 LAMBDA_WRITE_PERMISSIONS = [x.lower() for x in [
@@ -75,11 +76,12 @@ class LambdaWrite:
                 self.writes[lambda_arn][policy_arn] = actions
 
     def get_attached_local_policies(self):
-        client = boto3.Session(
-            profile_name=self.args.profile,
-            aws_access_key_id=self.args.keys[0],
-            aws_secret_access_key=self.args.keys[1],
-            region_name=self.args.region
+        client = create_session(
+            region=self.args.region,
+            profile=self.args.profile,
+            access_key_id=self.args.keys[0],
+            secret_access_key=self.args.keys[1],
+            role=self.args.role
         ).client('iam')
         pages = paginate(
             client,
