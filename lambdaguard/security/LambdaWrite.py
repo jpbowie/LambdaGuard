@@ -14,7 +14,6 @@ specific language governing permissions and limitations under the License.
 """
 
 
-import boto3
 from lambdaguard.utils.iterator import iterate
 from lambdaguard.utils.paginator import paginate
 from lambdaguard.utils.session import create_session

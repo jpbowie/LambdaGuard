@@ -19,9 +19,9 @@ import json
 
 
 class ACL(AWS):
-    def __init__(self, arn, profile=None, access_key_id=None, secret_access_key=None):
+    def __init__(self, arn, profile=None, access_key_id=None, secret_access_key=None, role=None):
         # Make sure we use IAM client
-        super().__init__("arn:aws:iam::", profile, access_key_id, secret_access_key)
+        super().__init__("arn:aws:iam::", profile, access_key_id, secret_access_key, role)
         self.arn = arnparse(arn)
         self.policy_documents = []
         self.permissions = []
