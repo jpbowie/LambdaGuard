@@ -34,7 +34,7 @@ class Scan:
         self.profile = args[0].profile
         self.access_key_id = args[0].keys[0]
         self.secret_access_key = args[0].keys[1]
-        self.role = args[0].key
+        self.role = args[0].role
         self.security = {'count': {}, 'items': []}
 
         self.item = None  # item currently scanned
